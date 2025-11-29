@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Stars from "../components/Stars";
 import Loader from "../components/Loader";
+import { useBudget } from "../context/BudgetContext";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
+  const { budget } = useBudget();
 
   useEffect(() => {
     axios
@@ -13,13 +15,16 @@ export default function Products() {
       .then((resp) => setProducts(resp.data));
   }, []);
 
+  const filteredProducts = budget
+    ? products.filter((product) => product.price <= 30)
+    : products;
+
   return (
     <div className="container py-4">
       {products.length === 0 ? (
         <Loader />
       ) : (
         <>
-          {" "}
           <div className="text-center mb-4">
             <h2 className="section-title">I nostri prodotti</h2>
             <p className="section-subtitle">
@@ -27,7 +32,7 @@ export default function Products() {
             </p>
           </div>
           <div className="row g-4 py-3">
-            {products.map(({ id, title, price, image, rating }) => {
+            {filteredProducts.map(({ id, title, price, image, rating }) => {
               return (
                 <div key={id} className="col-6 col-md-4 col-lg-3 col-xl-2">
                   <Link
