@@ -15,9 +15,10 @@ export default function Products() {
       .then((resp) => setProducts(resp.data));
   }, []);
 
-  const filteredProducts = budget
-    ? products.filter((product) => product.price <= 30)
-    : products;
+  const filteredProducts =
+    budget != null
+      ? products.filter((product) => product.price <= budget)
+      : products;
 
   return (
     <div className="container py-4">
@@ -32,35 +33,46 @@ export default function Products() {
             </p>
           </div>
           <div className="row g-4 py-3">
-            {filteredProducts.map(({ id, title, price, image, rating }) => {
-              return (
-                <div key={id} className="col-6 col-md-4 col-lg-3 col-xl-2">
-                  <Link
-                    className="product-card d-block text-decoration-none"
-                    to={`/products/${id}`}
-                  >
-                    <div className="product-img-wrapper">
-                      <img
-                        src={image}
-                        alt={title}
-                        className="img-fluid product-img"
-                      />
-                    </div>
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map(({ id, title, price, image, rating }) => {
+                return (
+                  <div key={id} className="col-6 col-md-4 col-lg-3 col-xl-2">
+                    <Link
+                      className="product-card d-block text-decoration-none"
+                      to={`/products/${id}`}
+                    >
+                      <div className="product-img-wrapper">
+                        <img
+                          src={image}
+                          alt={title}
+                          className="img-fluid product-img"
+                        />
+                      </div>
 
-                    <div className="product-body">
-                      <h5 className="product-title">
-                        {title.length > 30 ? title.slice(0, 30) + "..." : title}
-                      </h5>
-                      <p className="product-price">€ {price}</p>
-                      <Stars rating={rating.rate} />
-                      <span className="rating-count ms-2">
-                        ({rating.count})
-                      </span>
-                    </div>
-                  </Link>
-                </div>
-              );
-            })}
+                      <div className="product-body">
+                        <h5 className="product-title">
+                          {title.length > 30
+                            ? title.slice(0, 30) + "..."
+                            : title}
+                        </h5>
+                        <p className="product-price">€ {price}</p>
+                        <Stars rating={rating.rate} />
+                        <span className="rating-count ms-2">
+                          ({rating.count})
+                        </span>
+                      </div>
+                    </Link>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="text-center">
+                <h4>
+                  Al momento non sono presenti prodotti con questo range di
+                  prezzo!
+                </h4>
+              </div>
+            )}
           </div>
         </>
       )}

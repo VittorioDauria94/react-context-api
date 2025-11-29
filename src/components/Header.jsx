@@ -34,13 +34,18 @@ export default function Header() {
               ))}
             </ul>
           </div>
-          <button
-            className={`btn ${budget ? "btn-warning" : "btn-success"}`}
-            value={budget}
-            onClick={() => setBudget((prev) => !prev)}
-          >
-            {budget ? "Disattiva Modalità Budget" : "Attiva Modalità Budget"}
-          </button>
+          <div className="d-flex">
+            <input
+              id="max-price"
+              type="number"
+              className="form-control"
+              value={budget ?? ""}
+              onChange={(e) =>
+                setBudget(e.target.value === "" ? null : Number(e.target.value))
+              }
+              placeholder="Prezzo massimo"
+            />
+          </div>
         </div>
       </nav>
     </header>
